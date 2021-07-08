@@ -36,6 +36,7 @@ namespace SistemaHoteleiro.Models
         public void Update(string description, double price)
         {
             Description = description;
+            Price = price;
         }
     }
 }

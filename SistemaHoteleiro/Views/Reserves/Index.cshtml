@@ -34,6 +34,12 @@
                 @Html.DisplayNameFor(model => model.Cidade)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.NumberPeople)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.DataInicio)
             </th>
             <th>
@@ -57,7 +63,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Room.Name)
             </td>
-             <td>
+            <td>
                 @item.Room.CategoryRoom.Price.ToString("C")
             </td>
             <td>
@@ -73,6 +79,12 @@
                 @Html.DisplayFor(modelItem => item.Cidade)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.NumberPeople)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.DataInicio)
             </td>
             <td>
@@ -85,8 +97,8 @@
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Editar</a> 
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">Detalhes</a> 
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">Detalhes</a>
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Deletar</a>
             </td>
         </tr>

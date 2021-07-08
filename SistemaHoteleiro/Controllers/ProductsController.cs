@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaHoteleiro.Data;
@@ -10,6 +11,8 @@ using SistemaHoteleiro.Models;
 
 namespace SistemaHoteleiro.Controllers
 {
+    [Authorize]
+
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -59,7 +62,7 @@ namespace SistemaHoteleiro.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Price,Id,CreatedAt,Active")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,Price,Stock,Id,CreatedAt,Active")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +97,7 @@ namespace SistemaHoteleiro.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,Id,CreatedAt,Active")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,Stock,Id,CreatedAt,Active")] Product product)
         {
             if (id != product.Id)
             {

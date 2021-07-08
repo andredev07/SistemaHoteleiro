@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using SistemaHoteleiro.Models;
 
 namespace SistemaHoteleiro.Controllers
 {
+    [Authorize]
+
     public class ReservesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -46,6 +49,13 @@ namespace SistemaHoteleiro.Controllers
             .Include(x => x.Room.CategoryRoom)
             .FirstOrDefaultAsync(m => m.Id == id);
 
+            var reserveProducts = await _context.ReserveProducts
+                .Where(x => x.ReserveId == reserve.Id)
+                .Include(x => x.Product)
+                .ToListAsync();
+
+            reserve.ReserveProducts = reserveProducts;
+
             if (reserve == null)
             {
                 return NotFound();
@@ -79,7 +89,7 @@ namespace SistemaHoteleiro.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GuestId,RoomId,Fone,Cpf,Email,Cidade,DataInicio,DataFim,Id,CreatedAt,Active")] Reserve reserve)
+        public async Task<IActionResult> Create([Bind("GuestId,RoomId,Fone,Cpf,Email,Cidade,NumberPeople,DataInicio,DataFim,Id,CreatedAt,Active")] Reserve reserve)
         {
             if (ModelState.IsValid == true)
             {
@@ -89,11 +99,23 @@ namespace SistemaHoteleiro.Controllers
                 if (reserveAlreadyExist.Count > 0){
                     ModelState.AddModelError("already-exists", "Já existe uma reserva neste mesmo período para este quarto.");
                     return View(reserve);
-                }                                                               
+                }
+
+                var room = await _context.Rooms
+                    .Include(x => x.CategoryRoom)
+                    .FirstOrDefaultAsync(x => x.Id == reserve.RoomId);
+
+                int differenceInDays = (reserve.DataFim - reserve.DataInicio).Days;
+
+                reserve.TotalPrice = room.CategoryRoom.Price * differenceInDays;
 
                 _context.Add(reserve);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                ViewBag.Message = string.Format
+                    ("Usuário criado com sucesso");
+
+                return View(reserve);
             }
 
             return View(reserve);
@@ -138,7 +160,7 @@ namespace SistemaHoteleiro.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GuestId,RoomId,Fone,Cpf,Email,Cidade,DataInicio,DataFim,Id,CreatedAt,Active")] Reserve reserve)
+        public async Task<IActionResult> Edit(int id, [Bind("GuestId,RoomId,Fone,Cpf,Email,Cidade,NumberPeople,DataInicio,DataFim,Id,CreatedAt,Active")] Reserve reserve)
         {
             if (id != reserve.Id)
             {

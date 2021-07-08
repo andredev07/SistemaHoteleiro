@@ -9,10 +9,13 @@ namespace SistemaHoteleiro.Models
 {
     public class Guest : BaseEntity
     {
-        public Guest(string name, string email)
+        public Guest(string name, long fone, long cpf, string email, string cidade)
         {
             Name = name;
+            Fone = fone;
+            Cpf = cpf;
             Email = email;
+            Cidade = cidade;
         }
 
         public Guest()
@@ -29,7 +32,7 @@ namespace SistemaHoteleiro.Models
 
 
         [Display(Name = "CPF")]
-        public string Cpf { get; set; }
+        public long Cpf { get; set; }
 
 
         [DataType(DataType.EmailAddress)]
@@ -40,10 +43,13 @@ namespace SistemaHoteleiro.Models
 
         public IEnumerable<Reserve> Reserves { get; set; }
 
-        public void Update(string name, string email)
+        public void Update(string name, long fone, long cpf, string email, string cidade)
         {
             Name = name;
+            Fone = fone;
+            Cpf = cpf;
             Email = email;
+            Cidade = cidade;
         }
     }
 }

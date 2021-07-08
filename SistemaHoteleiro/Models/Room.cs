@@ -25,8 +25,10 @@ namespace SistemaHoteleiro.Models
         [Required(ErrorMessage = "Informe o Número do Quarto.")]
         public string Name { get; set; }
 
+
         [Required(ErrorMessage = "Informe a Categoria do quarto")]
         public int CategoryRoomId { get; set; }
+
 
         public IEnumerable<Reserve> Reserves { get; set; }
 

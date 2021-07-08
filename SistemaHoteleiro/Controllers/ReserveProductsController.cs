@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ using SistemaHoteleiro.Models;
 
 namespace SistemaHoteleiro.Controllers
 {
+    [Authorize]
+
     public class ReserveProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -43,7 +46,7 @@ namespace SistemaHoteleiro.Controllers
             }
 
             var reserveProduct = await _context.ReserveProducts
-                .FirstOrDefaultAsync(m => m.Id == id); 
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (reserveProduct == null)
             {
@@ -66,9 +69,9 @@ namespace SistemaHoteleiro.Controllers
             ViewBag.Products = products.Select(x => new SelectListItem
             {
                 Value = x.Id.ToString(),
-                Text  = x.Name
+                Text = x.Name
             });
-          
+
             return View(reserveProduct);
         }
 
@@ -80,14 +83,14 @@ namespace SistemaHoteleiro.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReserveId,ProductId,Id,CreatedAt,Active")] ReserveProduct reserveProduct)
         {
-            reserveProduct.Id = 0;   
+            reserveProduct.Id = 0;
 
             if (ModelState.IsValid)
             {
-                _context.ReserveProducts.Add(reserveProduct); 
+                _context.ReserveProducts.Add(reserveProduct);
 
                 await _context.SaveChangesAsync();
-                
+
                 return RedirectToAction(nameof(Index));
             }
             return View(reserveProduct);
@@ -170,7 +173,7 @@ namespace SistemaHoteleiro.Controllers
         }
 
 
-         // POST: Products/Delete/5
+        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -182,7 +185,7 @@ namespace SistemaHoteleiro.Controllers
             _context.ReserveProducts.Update(reserveProduct);
 
             await _context.SaveChangesAsync();
-            
+
             return RedirectToAction(nameof(Index));
         }
 

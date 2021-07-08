@@ -10,10 +10,16 @@ namespace SistemaHoteleiro.Models
     [Authorize]
     public class Reserve : BaseEntity  
     {
-        public Reserve(int guestId, int roomId, DateTime dataInicio, DateTime dataFim)
+        public Reserve(int guestId, int roomId, long fone, long cpf, string email, string cidade,int numberPeople, double totalPrice, DateTime dataInicio, DateTime dataFim)
         {
             GuestId = guestId;
             RoomId = roomId;
+            Fone = fone;
+            Cpf = cpf;
+            Email = email;
+            Cidade = cidade;
+            NumberPeople = numberPeople;
+            TotalPrice = totalPrice;
             DataInicio = dataInicio;
             DataFim = dataFim;
         }
@@ -47,6 +53,14 @@ namespace SistemaHoteleiro.Models
         public string Cidade { get; set; }
 
 
+        [Display(Name = "Quantidade de Pessoas")]
+        public int NumberPeople { get; set; }
+
+
+        [Display(Name = "Preço Total")]
+        public double TotalPrice { get; set; }
+
+
         [Display(Name = "Check-in")]
         public DateTime DataInicio { get; set; }
 
@@ -54,6 +68,7 @@ namespace SistemaHoteleiro.Models
         [Display(Name = "Check-out")]
         public DateTime DataFim { get; set; }
 
+        
 
         public Guest Guest { get; set; }
 

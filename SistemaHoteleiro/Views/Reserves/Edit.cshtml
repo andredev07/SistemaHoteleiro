@@ -13,12 +13,12 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                 <label asp-for="GuestId" class="control-label">Hóspede</label>
+                <label asp-for="GuestId" class="control-label">Hóspede</label>
                 <select class="form-select form-control" asp-for="GuestId" asp-items="@ViewBag.Guests"></select>
                 <span asp-validation-for="GuestId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                 <label asp-for="RoomId" class="control-label">Quarto</label>
+                <label asp-for="RoomId" class="control-label">Quarto</label>
                 <select class="form-select form-control" asp-for="RoomId" asp-items="@ViewBag.Rooms"></select>
                 <span asp-validation-for="RoomId" class="text-danger"></span>
             </div>
@@ -41,6 +41,11 @@
                 <label asp-for="Cidade" class="control-label">Cidade</label>
                 <input asp-for="Cidade" class="form-control" />
                 <span asp-validation-for="Cidade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberPeople" class="control-label">Quantidade de Pessoas</label>
+                <input asp-for="NumberPeople" class="form-control" />
+                <span asp-validation-for="NumberPeople" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DataInicio" class="control-label">Check-in</label>

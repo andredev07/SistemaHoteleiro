@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using SistemaHoteleiro.Models;
 
 namespace SistemaHoteleiro.Controllers
 {
+    [Authorize]
+
     public class GuestsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -64,6 +67,10 @@ namespace SistemaHoteleiro.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Message = string.Format
+                    ("Usuário criado com sucesso");
+
             return View(guest);
         }
 
