@@ -1,21 +1,26 @@
-@model SistemaHoteleiro.Models.ReserveProduct
+@model SistemaHoteleiro.Models.Sale
 
 @{
     ViewData["Title"] = "Editar Reserva de Produto";
 }
 
-<h1>Editar Reserva de Produto</h1>
+<h1>Editar Venda</h1>
 
-<h4>Reserva de Produto</h4>
+<h4>Venda</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductId" class="control-label"></label>
-                <input asp-for="ProductId" class="form-control" />
+                <label asp-for="ProductId" class="control-label">Produto</label>
+                <select class="form-select form-control" asp-for="ProductId" asp-items="@ViewBag.Products"></select>
                 <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label">Quantidade</label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Salvar" class="btn btn-primary" />

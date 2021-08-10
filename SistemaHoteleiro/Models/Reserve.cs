@@ -75,7 +75,7 @@ namespace SistemaHoteleiro.Models
 
         public Room Room { get; set; }
 
-        public IEnumerable<ReserveProduct> ReserveProducts { get; set; }
+        public IEnumerable<Sale> Sales { get; set; }
 
         public void Update(int guestId, DateTime dataInicio, DateTime dataFim)
         {

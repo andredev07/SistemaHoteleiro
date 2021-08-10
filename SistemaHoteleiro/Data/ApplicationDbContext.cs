@@ -24,7 +24,9 @@ namespace SistemaHoteleiro.Data
 
         public DbSet<Product> Products {get; set; }
 
-        public DbSet<ReserveProduct> ReserveProducts { get;set; }
+        public DbSet<Sale> Sales { get;set; }
+
+        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,18 +55,18 @@ namespace SistemaHoteleiro.Data
                        .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<ReserveProduct>(reserveProduct => 
+            modelBuilder.Entity<Sale>(sale => 
             {
-                reserveProduct.HasOne(x => x.Product)
-                .WithMany(product => product.ReserveProducts)
+                sale.HasOne(x => x.Product)
+                .WithMany(product => product.Sales)
                 .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<ReserveProduct>(reserveProduct => 
+            modelBuilder.Entity<Sale>(sale => 
             {
-                reserveProduct.HasOne(x => x.Reserve)
-                .WithMany(reserve => reserve.ReserveProducts)
+                sale.HasOne(x => x.Reserve)
+                .WithMany(reserve => reserve.Sales)
                 .HasForeignKey(x => x.ReserveId)
                 .OnDelete(DeleteBehavior.Cascade);
             });

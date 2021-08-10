@@ -49,12 +49,12 @@ namespace SistemaHoteleiro.Controllers
             .Include(x => x.Room.CategoryRoom)
             .FirstOrDefaultAsync(m => m.Id == id);
 
-            var reserveProducts = await _context.ReserveProducts
+            var sales = await _context.Sales
                 .Where(x => x.ReserveId == reserve.Id)
                 .Include(x => x.Product)
                 .ToListAsync();
 
-            reserve.ReserveProducts = reserveProducts;
+            reserve.Sales = sales;
 
             if (reserve == null)
             {

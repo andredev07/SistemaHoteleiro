@@ -14,11 +14,11 @@ namespace SistemaHoteleiro.Controllers
 {
     [Authorize]
 
-    public class ReserveProductsController : Controller
+    public class SalesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ReserveProductsController(ApplicationDbContext context)
+        public SalesController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -27,7 +27,7 @@ namespace SistemaHoteleiro.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var reserveProduct = await _context.ReserveProducts
+            var reserveProduct = await _context.Sales
             .Where(x => x.Active)
             .Include(x => x.Product)
             .Include(x => x.Reserve.Room.CategoryRoom)
@@ -45,7 +45,7 @@ namespace SistemaHoteleiro.Controllers
                 return NotFound();
             }
 
-            var reserveProduct = await _context.ReserveProducts
+            var reserveProduct = await _context.Sales
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (reserveProduct == null)
@@ -60,7 +60,7 @@ namespace SistemaHoteleiro.Controllers
         // GET: ReserveProducts/Create/4
         public async Task<IActionResult> Create(int id)
         {
-            var reserveProduct = new ReserveProduct();
+            var reserveProduct = new Sale();
 
             reserveProduct.ReserveId = id;
 
@@ -81,13 +81,27 @@ namespace SistemaHoteleiro.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReserveId,ProductId,Id,CreatedAt,Active")] ReserveProduct reserveProduct)
+        public async Task<IActionResult> Create ([Bind("ReserveId,ProductId,Id,CreatedAt,Active,Amount")] Sale reserveProduct)
         {
             reserveProduct.Id = 0;
 
             if (ModelState.IsValid)
             {
-                _context.ReserveProducts.Add(reserveProduct);
+                var searchProduct = await _context.Products.FirstOrDefaultAsync(x => x.Id == reserveProduct.ProductId);
+
+                if (searchProduct.Stock < reserveProduct.Amount)
+                {
+                    ModelState.AddModelError("sem-estoque", "O produto não possui estoque disponivel.");
+                    return View(reserveProduct);
+                } 
+
+                _context.Sales.Add(reserveProduct);
+
+                searchProduct.Stock = searchProduct.Stock - reserveProduct.Amount;
+
+                var transaction = new Transaction();
+
+                _context.Transactions.Add(transaction);
 
                 await _context.SaveChangesAsync();
 
@@ -105,7 +119,7 @@ namespace SistemaHoteleiro.Controllers
                 return NotFound();
             }
 
-            var reserveProduct = await _context.ReserveProducts.FindAsync(id);
+            var reserveProduct = await _context.Sales.FindAsync(id);
 
             if (reserveProduct == null)
             {
@@ -122,7 +136,7 @@ namespace SistemaHoteleiro.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReserveId,ProductId,Id,CreatedAt,Active")] ReserveProduct reserveProduct)
+        public async Task<IActionResult> Edit(int id, [Bind("ReserveId,ProductId,Id,CreatedAt,Active")] Sale reserveProduct)
         {
             if (id != reserveProduct.Id)
             {
@@ -161,7 +175,7 @@ namespace SistemaHoteleiro.Controllers
                 return NotFound();
             }
 
-            var reserveProduct = await _context.ReserveProducts
+            var reserveProduct = await _context.Sales
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (reserveProduct == null)
@@ -178,11 +192,11 @@ namespace SistemaHoteleiro.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var reserveProduct = await _context.ReserveProducts.FindAsync(id);
+            var reserveProduct = await _context.Sales.FindAsync(id);
 
             reserveProduct.Deactivate();
 
-            _context.ReserveProducts.Update(reserveProduct);
+            _context.Sales.Update(reserveProduct);
 
             await _context.SaveChangesAsync();
 
@@ -192,7 +206,7 @@ namespace SistemaHoteleiro.Controllers
 
         private bool ReserveProductExists(int id)
         {
-            return _context.ReserveProducts.Any(e => e.Id == id);
+            return _context.Sales.Any(e => e.Id == id);
         }
     }
 }

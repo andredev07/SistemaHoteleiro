@@ -29,7 +29,7 @@ namespace SistemaHoteleiro.Models
         [Display(Name = "Estoque")]
         public int Stock { get; set; }
 
-        public IEnumerable<ReserveProduct> ReserveProducts { get; set; }
+        public IEnumerable<Sale> Sales { get; set; }
 
         public void Update(string name, double price)
         {

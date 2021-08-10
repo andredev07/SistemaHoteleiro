@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SistemaHoteleiro.Models
 {
-    public class ReserveProduct : BaseEntity
+    public class Sale : BaseEntity
     {
-        public ReserveProduct(int reserveId, int productId)
+        public Sale(int reserveId, int productId)
         {
             ReserveId = reserveId;
             ProductId = productId;
         }
 
-        public ReserveProduct()
+        public Sale()
         {
             
         }
@@ -23,6 +23,9 @@ namespace SistemaHoteleiro.Models
         [Display(Name = "Produto")]
         [Required(ErrorMessage = "Informe o nome do Produto.")]
         public int ProductId { get; set; }
+
+        [Display(Name = "Quantidade")]
+        public int Amount{ get; set; }
 
         public Product Product { get; set; }
 

@@ -3,20 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaHoteleiro.Data;
 
 namespace SistemaHoteleiro.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210716004448_AddAttGeral")]
+    partial class AddAttGeral
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.8")
+                .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -357,6 +359,37 @@ namespace SistemaHoteleiro.Data.Migrations
                     b.ToTable("Reserves");
                 });
 
+            modelBuilder.Entity("SistemaHoteleiro.Models.ReserveProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReserveId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ReserveId");
+
+                    b.ToTable("ReserveProducts");
+                });
+
             modelBuilder.Entity("SistemaHoteleiro.Models.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -389,64 +422,6 @@ namespace SistemaHoteleiro.Data.Migrations
                         .HasFilter("[CategoryRoomId1] IS NOT NULL");
 
                     b.ToTable("Rooms");
-                });
-
-            modelBuilder.Entity("SistemaHoteleiro.Models.Sale", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReserveId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ReserveId");
-
-                    b.ToTable("Sales");
-                });
-
-            modelBuilder.Entity("SistemaHoteleiro.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -519,6 +494,25 @@ namespace SistemaHoteleiro.Data.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("SistemaHoteleiro.Models.ReserveProduct", b =>
+                {
+                    b.HasOne("SistemaHoteleiro.Models.Product", "Product")
+                        .WithMany("ReserveProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SistemaHoteleiro.Models.Reserve", "Reserve")
+                        .WithMany("ReserveProducts")
+                        .HasForeignKey("ReserveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Reserve");
+                });
+
             modelBuilder.Entity("SistemaHoteleiro.Models.Room", b =>
                 {
                     b.HasOne("SistemaHoteleiro.Models.CategoryRoom", "CategoryRoom")
@@ -532,25 +526,6 @@ namespace SistemaHoteleiro.Data.Migrations
                         .HasForeignKey("SistemaHoteleiro.Models.Room", "CategoryRoomId1");
 
                     b.Navigation("CategoryRoom");
-                });
-
-            modelBuilder.Entity("SistemaHoteleiro.Models.Sale", b =>
-                {
-                    b.HasOne("SistemaHoteleiro.Models.Product", "Product")
-                        .WithMany("Sales")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SistemaHoteleiro.Models.Reserve", "Reserve")
-                        .WithMany("Sales")
-                        .HasForeignKey("ReserveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Reserve");
                 });
 
             modelBuilder.Entity("SistemaHoteleiro.Models.CategoryRoom", b =>
@@ -567,12 +542,12 @@ namespace SistemaHoteleiro.Data.Migrations
 
             modelBuilder.Entity("SistemaHoteleiro.Models.Product", b =>
                 {
-                    b.Navigation("Sales");
+                    b.Navigation("ReserveProducts");
                 });
 
             modelBuilder.Entity("SistemaHoteleiro.Models.Reserve", b =>
                 {
-                    b.Navigation("Sales");
+                    b.Navigation("ReserveProducts");
                 });
 
             modelBuilder.Entity("SistemaHoteleiro.Models.Room", b =>

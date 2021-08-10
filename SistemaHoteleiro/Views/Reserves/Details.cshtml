@@ -8,11 +8,13 @@
 
 <div>
     <h4>Reserva</h4>
+
     <a 
     class="btn btn-primary"
-    asp-controller="ReserveProducts" asp-action="Create" asp-route-id="@Model.Id">
-    Adicionar Produto na Reserva
+    asp-controller="Sales" asp-action="Create" asp-route-id="@Model.Id">
+    Adicionar Venda na Reserva
     </a>
+
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -99,7 +101,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.ReserveProducts)
+                @foreach (var item in Model.Sales)
                 {
                     <tr>
                         <th scope="row">@item.Product.Id</th>
